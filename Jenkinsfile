@@ -4,22 +4,19 @@ pipeline {
     stages {
         stage('Code checkout from Git') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    extensions: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'jenkins-git-integration',
-                        url: 'https://github.com/arunawsdevops/terraform-test-run-jenkins'
-                    ]]
-                ])
+                // Clone the public repository from GitHub
+                git url: 'https://github.com/remyars18/terraform-test-run-jenkins.git', branch: 'main'
             }
         }
-
-        stage('terraform init') {
+        
+        stage('Terraform Init') {
             steps {
                 script {
-                    sh "terraform init"
+                    // Use AWS credentials stored in Jenkins credentials manager
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credential']]) {
+                        // Run terraform init with -reconfigure flag to reconfigure backend
+                        sh 'terraform init  -reconfigure'  // Run terraform init to initialize the backend
+                    }
                 }
             }
         }
