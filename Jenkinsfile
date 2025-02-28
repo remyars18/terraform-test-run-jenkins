@@ -1,5 +1,5 @@
 pipeline {
-    agent prod
+    agent any
 
     stages {
         stage('Code checkout from Git') {
