@@ -1,8 +1,5 @@
 pipeline {
-    agent any
-    tools {
-        git '/usr/bin/git' // Path to Git executable in the system
-    }
+    agent prod
 
     stages {
         stage('Code checkout from Git') {
